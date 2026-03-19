@@ -211,6 +211,13 @@ challenges:
         hostname: es3-api
         port: 8080
         path: "/app/dashboards#/list?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))"
+        # Match elastic-autonomous-observability: CSP overrides so Elastic UI loads in Instruqt’s iframe
+        request_headers:
+          - key: Content-Security-Policy
+            value: "script-src 'self'"
+        response_headers:
+          - key: Content-Security-Policy
+            value: "script-src 'self'"
       - title: Terminal
         type: terminal
         hostname: es3-api
@@ -247,6 +254,13 @@ challenges:
         hostname: es3-api
         port: 8080
         path: "/app/dashboards#/list?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))"
+        # Match elastic-autonomous-observability: CSP overrides so Elastic UI loads in Instruqt’s iframe
+        request_headers:
+          - key: Content-Security-Policy
+            value: "script-src 'self'"
+        response_headers:
+          - key: Content-Security-Policy
+            value: "script-src 'self'"
       - title: Terminal
         type: terminal
         hostname: es3-api
@@ -278,6 +292,13 @@ challenges:
         hostname: es3-api
         port: 8080
         path: "/app/dashboards#/list?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))"
+        # Match elastic-autonomous-observability: CSP overrides so Elastic UI loads in Instruqt’s iframe
+        request_headers:
+          - key: Content-Security-Policy
+            value: "script-src 'self'"
+        response_headers:
+          - key: Content-Security-Policy
+            value: "script-src 'self'"
       - title: Terminal
         type: terminal
         hostname: es3-api
@@ -310,6 +331,13 @@ challenges:
         hostname: es3-api
         port: 8080
         path: "/app/dashboards#/list?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))"
+        # Match elastic-autonomous-observability: CSP overrides so Elastic UI loads in Instruqt’s iframe
+        request_headers:
+          - key: Content-Security-Policy
+            value: "script-src 'self'"
+        response_headers:
+          - key: Content-Security-Policy
+            value: "script-src 'self'"
       - title: Attack Simulator
         type: service
         hostname: es3-api

@@ -6,6 +6,8 @@ Shared workshop content lives under **`instruqt/`** (`challenges/`, `lib/`, `sta
 
 Challenge **Scripts** (like [elastic-autonomous-observability / connect-and-deploy](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability/challenges/connect-and-deploy/tabs)) use Instruqt’s **`setup-es3-api`**, **`check-es3-api`**, **`solve-es3-api`** naming so they bind to the **`es3-api`** host. The **Elastic Serverless** service tab uses **`path: /app/dashboards#/list?...`** on port **8080** (same idea as AO’s “Elastic Serverless” tab).
 
+**Custom HTTP headers (CSP):** AO-style **`Content-Security-Policy: script-src 'self'`** as both **request** and **response** headers on the **Elastic Serverless** tab are declared in **`track-serverless.yml`** (`request_headers` / `response_headers`) so they survive **`instruqt track push`**. If the embedded UI is blank, verify those headers in the Instruqt UI. See [docs/instruqt-serverless.md](../docs/instruqt-serverless.md#elastic-serverless-tab--content-security-policy-iframe).
+
 ## Challenge layout
 
 Keep **one** challenge tree: `instruqt/challenges/01-…`. The **pushable** track root is `review-bomb-workshop-serverless/` with `assignment: challenges/01-…/assignment.md`.

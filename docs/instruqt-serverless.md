@@ -13,6 +13,19 @@ This guide describes the **Serverless** variant of the Negative Review Campaign 
 
 Pushable track root: **`instruqt/review-bomb-workshop-serverless/`** (contains `track.yml`, `config.yml`, `track_scripts/`, symlinks to shared `challenges/` and `lib/`).
 
+### Elastic Serverless tab — Content-Security-Policy (iframe)
+
+The **Elastic Serverless** service tab (port **8080**) loads Kibana/Elastic UI through Instruqt’s embedded iframe. Like **[elastic-autonomous-observability](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability)**, you may need **custom HTTP headers** on that tab if the UI stays blank or scripts fail:
+
+| Direction | Key | Value |
+|-----------|-----|--------|
+| **Request** → | `Content-Security-Policy` | `script-src 'self'` |
+| **Response** ← | `Content-Security-Policy` | `script-src 'self'` |
+
+The repo’s **`track-serverless.yml`** declares the same via **`request_headers`** / **`response_headers`** under each **Elastic Serverless** tab so `instruqt track push` keeps them in sync. If a future CLI version ignores those keys, re-add them under **Tabs → Elastic Serverless → Custom HTTP headers** in the Instruqt UI.
+
+**Note:** Track **`setup-es3-api`** already configures nginx with `proxy_hide_header Content-Security-Policy` (and related headers) when proxying to Cloud Kibana; the tab-level CSP is still required for Instruqt’s own iframe wrapper in some environments.
+
 **Loading / wait UX:** `enhanced_loading: false` in `track.yml` matches Instruqt **[Notes only](https://docs.instruqt.com/tracks/manage/loading-experience)** — learners see the challenge **`notes:`** carousel (slides) while the sandbox provisions, like **[elastic-autonomous-observability](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability)**. Setting `enhanced_loading: true` switches to **Full access** and shows assignment + tabs early with generic per-tab loading text instead.
 
 ## Sandbox summary
