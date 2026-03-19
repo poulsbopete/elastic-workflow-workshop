@@ -63,7 +63,7 @@ Workflows are defined in YAML and consist of:
 
 ### Task 1: Open the Workflows App (2 min)
 
-1. Open **Kibana** in your browser
+1. Open the **Elastic Serverless** tab in your browser
 2. In the left navigation, click the **Workflows** icon (or use the search bar and type "Workflows")
 3. You should see the Workflows management page
 

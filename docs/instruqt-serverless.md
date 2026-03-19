@@ -21,7 +21,7 @@ Pushable track root: **`instruqt/review-bomb-workshop-serverless/`** (contains `
 |--------|---------------------|
 | **Host** | **`es3-api`** (`elastic/es3-api-v2`) |
 | **Elasticsearch** | **Serverless Elasticsearch** project (created per participant) |
-| **Kibana tab** | **`:8080`** on `es3-api` (nginx → Cloud) |
+| **Elastic Serverless tab** | **`:8080`** on `es3-api` (nginx → Cloud UI; opens **Dashboards** list like AO) |
 | **Data** | **Bulk API** via `startup-serverless.sh` |
 | **Secrets** | **`ESS_CLOUD_API_KEY`**, **`LLM_PROXY_PROD`** (Sandbox → Secrets) |
 
@@ -74,7 +74,7 @@ If the Serverless project has **ELSER**, `startup-serverless.sh` creates `semant
 
 | Symptom | What to check |
 |--------|----------------|
-| **`python3-venv` / broken `.venv/bin/python3`** | Use current repo: **`instruqt/lib/serverless_pydeps.sh`** + **`startup-serverless.sh`** install with **`pip install -t .pydeps`** and **`rm -rf .venv`**. **`setup-host-1-serverless`** no longer runs `python3 -m venv`. Commit, push Git, then re-run the track so `/opt/elastic-workflow-workshop` pulls the update. |
+| **`python3-venv` / broken `.venv/bin/python3`** | Use **`instruqt/lib/serverless_pydeps.sh`** + **`startup-serverless.sh`** (`pip install -t .pydeps`, **`rm -rf .venv`**). Challenge **`setup-es3-api`** on each host. Commit, push Git, then re-run the track. |
 | **Stale clone on lab VM** | `setup-es3-api` runs `git pull` after clone; set **`WORKSHOP_REPO`** / branch in `config.yml` if you use a fork. |
 | **API key errors** | Sandbox secret **`ESS_CLOUD_API_KEY`** must match the Elastic Cloud org key used by other `es3-api-v2` tracks. |
 | **Logs** | `instruqt track logs review-bomb-workshop-serverless --since 15m` |

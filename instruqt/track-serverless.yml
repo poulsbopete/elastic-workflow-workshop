@@ -8,8 +8,8 @@
 # - track_scripts/setup-es3-api creates a Serverless *Elasticsearch* project, nginx
 #   proxies Kibana → :8080 and Elasticsearch → :9200, then loads workshop data.
 #
-# Service tabs:
-#   - Kibana → es3-api:8080 (nginx → Cloud Kibana, Basic auth injected)
+# Service tabs (align naming with elastic-autonomous-observability):
+#   - Elastic Serverless → es3-api:8080 + /app/dashboards (nginx → Cloud UI, Basic auth injected)
 #   - ElasticEats / Attack → es3-api:8000 (FastAPI)
 #
 
@@ -25,7 +25,7 @@ description: |
   using **Elastic Cloud Serverless (Elasticsearch)**.
 
   The lab environment is provisioned the same way as **Elastic Autonomous Observability**:
-  an `es3-api` host creates your Serverless project and nginx exposes Kibana and Elasticsearch.
+  an `es3-api` host creates your Serverless project and nginx exposes the Elastic UI (Kibana) and Elasticsearch.
 
   You'll learn how to:
   - Write detection queries using ES|QL and LOOKUP JOIN
@@ -95,8 +95,8 @@ challenges:
           # Welcome to the Negative Review Campaign Detection Workshop (Serverless)!
 
           Your **Serverless Elasticsearch** project is provisioned on the **`es3-api`** host
-          (same pattern as **Elastic Autonomous Observability**). **Kibana** is on port **8080**
-          (nginx proxy to the cloud). Workshop data is loaded via the bulk API.
+          (same pattern as **Elastic Autonomous Observability**). Open the **Elastic Serverless** tab (port **8080**,
+          nginx proxy to the cloud — dashboards list). Workshop data is loaded via the bulk API.
 
           ## What You'll Build
           - Detection queries with **ES|QL**
@@ -111,7 +111,7 @@ challenges:
           Track setup is:
 
           - Creating your **Serverless Elasticsearch** project (`es3-api.py`)
-          - Starting **nginx** (Kibana **:8080**, Elasticsearch **:9200** on the VM)
+          - Starting **nginx** (Elastic UI **:8080**, Elasticsearch **:9200** on the VM)
           - Creating indices and **bulk-loading** businesses, users, and reviews
           - Starting **ElasticEats** on **:8000**
 
@@ -134,15 +134,16 @@ challenges:
           # What to open when ready
 
           1. **ElasticEats** — consumer UI over the same data you'll query.
-          2. **Kibana** — ES|QL, Discover, Workflows, Agent Builder (**:8080**).
+          2. **Elastic Serverless** — ES|QL, Discover, Workflows, Agent Builder (**:8080**).
           3. **Terminal** — optional shell and scripts.
 
           Use the **note slides** (dots or swipe) while the environment finishes loading.
     tabs:
-      - title: Kibana
+      - title: Elastic Serverless
         type: service
         hostname: es3-api
         port: 8080
+        path: "/app/dashboards#/list?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))"
       - title: Terminal
         type: terminal
         hostname: es3-api
@@ -170,14 +171,15 @@ challenges:
         contents: |
           # Preparing workflow prerequisites
 
-          We're ensuring **Kibana** and the **incidents** / **notifications** indices are ready.
+          We're ensuring **Elastic Serverless** and the **incidents** / **notifications** indices are ready.
 
           If a tab still shows a spinner, skim the **assignment** — you can start reading the ES|QL detection steps while components load.
     tabs:
-      - title: Kibana
+      - title: Elastic Serverless
         type: service
         hostname: es3-api
         port: 8080
+        path: "/app/dashboards#/list?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))"
       - title: Terminal
         type: terminal
         hostname: es3-api
@@ -200,14 +202,15 @@ challenges:
         contents: |
           # Agent Builder is loading
 
-          Kibana may take a moment to surface **Agent Builder** and saved objects.
+          **Elastic Serverless** may take a moment to surface **Agent Builder** and saved objects.
 
           Review the tool definitions in the assignment while you wait — you'll point them at `reviews`, `users`, `businesses`, and `incidents`.
     tabs:
-      - title: Kibana
+      - title: Elastic Serverless
         type: service
         hostname: es3-api
         port: 8080
+        path: "/app/dashboards#/list?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))"
       - title: Terminal
         type: terminal
         hostname: es3-api
@@ -233,12 +236,13 @@ challenges:
 
           We're checking **ElasticEats** (**:8000**) and paths to **Elasticsearch** so the scenario can post reviews.
 
-          When tabs are green, open **Attack Simulator**, trigger the campaign, then watch **Kibana** for incidents and held reviews.
+          When tabs are green, open **Attack Simulator**, trigger the campaign, then watch **Elastic Serverless** for incidents and held reviews.
     tabs:
-      - title: Kibana
+      - title: Elastic Serverless
         type: service
         hostname: es3-api
         port: 8080
+        path: "/app/dashboards#/list?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))"
       - title: Attack Simulator
         type: service
         hostname: es3-api

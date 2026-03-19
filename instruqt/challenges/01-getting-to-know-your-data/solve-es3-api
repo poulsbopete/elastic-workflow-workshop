@@ -1,0 +1,4 @@
+#!/bin/bash
+# Run challenge solve on es3-api (Instruqt: solve-<hostname>)
+set -e
+exec "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/solve.sh"

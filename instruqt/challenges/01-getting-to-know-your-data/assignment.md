@@ -54,9 +54,9 @@ Before diving into queries, let's see the platform you're protecting. ElasticEat
 
 ### Task 2: Explore the Businesses Index (3 min)
 
-Now let's look at the same data from the analyst's perspective using ES|QL in Kibana.
+Now let's look at the same data from the analyst's perspective using ES|QL in the Elastic UI (Elastic Serverless tab).
 
-1. Open **Kibana** in the browser tab
+1. Open the **Elastic Serverless** tab in the browser
 2. Navigate to **Discover** (Menu > Analytics > Discover)
 3. Click the language dropdown (usually shows "KQL") and select **ES|QL**
 4. Run this query to count businesses:

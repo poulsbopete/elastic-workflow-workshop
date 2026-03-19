@@ -182,7 +182,7 @@ systemctl restart nginx
 sleep 2
 systemctl is-active --quiet nginx
 
-# Workshop bootstrap: talk to ES through local nginx; Kibana tab uses :8080
+# Workshop bootstrap: talk to ES through local nginx; Elastic Serverless tab uses :8080
 export ELASTICSEARCH_URL="http://127.0.0.1:9200"
 export KIBANA_URL="http://127.0.0.1:8080"
 export ELASTICSEARCH_API_KEY

@@ -4,6 +4,8 @@ The only Instruqt track in this repo is **[review-bomb-workshop-serverless](http
 
 Shared workshop content lives under **`instruqt/`** (`challenges/`, `lib/`, `startup-serverless.sh`) and is symlinked from **`review-bomb-workshop-serverless/`**.
 
+Challenge **Scripts** (like [elastic-autonomous-observability / connect-and-deploy](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability/challenges/connect-and-deploy/tabs)) use Instruqt’s **`setup-es3-api`**, **`check-es3-api`**, **`solve-es3-api`** naming so they bind to the **`es3-api`** host. The **Elastic Serverless** service tab uses **`path: /app/dashboards#/list?...`** on port **8080** (same idea as AO’s “Elastic Serverless” tab).
+
 ## Challenge layout
 
 Keep **one** challenge tree: `instruqt/challenges/01-…`. The **pushable** track root is `review-bomb-workshop-serverless/` with `assignment: challenges/01-…/assignment.md`.

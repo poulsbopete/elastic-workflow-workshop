@@ -67,7 +67,7 @@ In this challenge, you'll create three investigation tools and an agent to use t
 
 ### Task 1: Navigate to Agent Builder (1 min)
 
-1. Open **Kibana** in your browser
+1. Open the **Elastic Serverless** tab in your browser
 2. Click the hamburger menu in the top left
 3. Navigate to **Management** > **AI** > **Agent Builder**
    - Or use the search bar and type "Agent Builder"

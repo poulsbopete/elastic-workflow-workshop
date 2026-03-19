@@ -68,7 +68,7 @@ Before we begin, open the **ElasticEats** consumer interface - this is a Yelp-li
 
 Before the attack, verify the target business is in a normal state.
 
-1. Open **Kibana** and navigate to **Discover**, then select **ES|QL** mode
+1. Open **Elastic Serverless** and navigate to **Discover**, then select **ES|QL** mode
 
 2. Check the target business:
    ```esql
@@ -133,7 +133,7 @@ Now you'll launch a simulated negative review campaign against the target busine
    - See the **Low Trust** badges on attacker accounts
    - Check the "Recent Activity (24h)" sidebar — review count and velocity spike
 
-   **In Kibana (ES|QL):**
+   **In Elastic Serverless (ES|QL):**
    ```esql
    FROM reviews
    | WHERE business_id == "ytynqOUb3hjKeJfRj5Tshw"
@@ -150,7 +150,7 @@ Now you'll launch a simulated negative review campaign against the target busine
 
 Your workflow should detect the attack automatically. Let's observe it in action.
 
-1. Navigate to **Workflows** in Kibana
+1. Navigate to **Workflows** in Elastic Serverless
 
 2. Find your **Negative Review Campaign Detection** workflow
 
@@ -287,7 +287,7 @@ Now use the **Review Campaign Investigator** agent you created in Challenge 3 to
 
 Complete the incident lifecycle by resolving it.
 
-1. Review the held reviews in Kibana:
+1. Review the held reviews in Elastic Serverless:
    ```esql
    FROM reviews
    | WHERE business_id == "ytynqOUb3hjKeJfRj5Tshw"
@@ -308,7 +308,7 @@ Complete the incident lifecycle by resolving it.
    - **Flag** the attacker accounts for suspension
    - **Update** the incident status to "resolved"
 
-4. Update the incident status. In **Kibana Dev Tools**, run:
+4. Update the incident status. In **Dev Tools** (Elastic Serverless), run:
 
    ```
    POST /incidents/_update_by_query

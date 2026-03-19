@@ -1,0 +1,4 @@
+#!/bin/bash
+# Run challenge check on es3-api (Instruqt: check-<hostname>)
+set -e
+exec "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/check.sh"

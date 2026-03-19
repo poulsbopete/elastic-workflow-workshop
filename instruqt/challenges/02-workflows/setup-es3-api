@@ -1,0 +1,4 @@
+#!/bin/bash
+# Challenge 2 setup on es3-api — delegates to setup.sh (workflows / Kibana prep)
+set -e
+exec bash "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/setup.sh"
