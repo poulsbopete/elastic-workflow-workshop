@@ -26,7 +26,7 @@ WARNINGS=0
 echo ""
 echo "[1/4] Checking incidents index..."
 
-if curl -s -o /dev/null -w "%{http_code}" "${ELASTICSEARCH_URL}/incidents" 2>/dev/null | grep -q "200"; then
+if es_curl -o /dev/null -w "%{http_code}" "${ELASTICSEARCH_URL}/incidents" 2>/dev/null | grep -q "200"; then
     echo "  OK: incidents index exists."
 else
     echo "  FAIL: incidents index not found."
@@ -40,7 +40,7 @@ fi
 echo ""
 echo "[2/4] Checking notifications index..."
 
-if curl -s -o /dev/null -w "%{http_code}" "${ELASTICSEARCH_URL}/notifications" 2>/dev/null | grep -q "200"; then
+if es_curl -o /dev/null -w "%{http_code}" "${ELASTICSEARCH_URL}/notifications" 2>/dev/null | grep -q "200"; then
     echo "  OK: notifications index exists."
 else
     echo "  WARN: notifications index not found."
@@ -56,7 +56,7 @@ echo "[3/4] Checking for workflow creation..."
 
 # Try to find workflows via Kibana API
 # Note: The exact endpoint depends on the Workflows implementation
-WORKFLOW_SEARCH=$(curl -s "${KIBANA_URL}/api/saved_objects/_find?type=workflow&per_page=100" \
+WORKFLOW_SEARCH=$(es_curl "${KIBANA_URL}/api/saved_objects/_find?type=workflow&per_page=100" \
     -H "kbn-xsrf: true" 2>/dev/null || echo '{"total":0}')
 
 WORKFLOW_COUNT=$(echo "$WORKFLOW_SEARCH" | grep -o '"total":[0-9]*' | grep -o '[0-9]*' || echo "0")
@@ -77,7 +77,7 @@ else
     # This depends on how Workflows is implemented in your version
 
     # Check if there's been any workflow execution (would indicate workflow exists)
-    WORKFLOW_LOG_CHECK=$(curl -s "${KIBANA_URL}/api/workflows/executions?per_page=1" \
+    WORKFLOW_LOG_CHECK=$(es_curl "${KIBANA_URL}/api/workflows/executions?per_page=1" \
         -H "kbn-xsrf: true" 2>/dev/null || echo '{"total":0}')
 
     EXECUTION_COUNT=$(echo "$WORKFLOW_LOG_CHECK" | grep -o '"total":[0-9]*' | grep -o '[0-9]*' || echo "0")
@@ -98,7 +98,7 @@ fi
 echo ""
 echo "[4/4] Verifying Kibana accessibility..."
 
-if curl -s "${KIBANA_URL}/api/status" 2>/dev/null | grep -q '"level":"available"'; then
+if es_curl "${KIBANA_URL}/api/status" 2>/dev/null | grep -q '"level":"available"'; then
     echo "  OK: Kibana is accessible."
 else
     echo "  FAIL: Cannot connect to Kibana."

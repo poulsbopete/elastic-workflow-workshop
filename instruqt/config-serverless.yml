@@ -1,0 +1,21 @@
+# Instruqt sandbox configuration for Serverless (search) track
+#
+# Base: Use the same pattern as elastic-autonomous-observability:
+#   - One VM (host-1) where the workshop app and scripts run
+#   - Elastic Cloud Serverless (search) connection provides:
+#     ELASTICSEARCH_URL, ELASTICSEARCH_API_KEY, KIBANA_URL
+#
+# In Instruqt, attach an Elastic Cloud connection to this track so those
+# environment variables are set on host-1. The track setup script
+# (startup-serverless.sh or setup-host-1) creates indices and loads data
+# via the bulk API (no snapshot/restore).
+#
+version: "3"
+
+virtualmachines:
+  - name: host-1
+    image: elastic/instruqt-ubuntu-base  # or your org's base image
+    shell: bash
+    machine_type: n1-standard-2
+    # Connection to Elastic Cloud Serverless (search) injects:
+    # ELASTICSEARCH_URL, ELASTICSEARCH_API_KEY, KIBANA_URL

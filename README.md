@@ -382,6 +382,16 @@ The `track.yml` defines:
 
 See `instruqt/README.md` for detailed deployment instructions.
 
+### Serverless (search) track
+
+The workshop can run on **Elastic Cloud Serverless (search)** using the same content and challenges. This uses [elastic-autonomous-observability](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability) as the environment base: one VM with credentials to a Serverless project, data loaded via bulk API (no snapshot restore).
+
+- **Track:** `instruqt/track-serverless.yml`
+- **Sandbox:** `instruqt/config-serverless.yml` (single host `host-1`)
+- **Startup:** `instruqt/startup-serverless.sh` (create indices with `--serverless`, load data, start app)
+
+See [docs/instruqt-serverless.md](docs/instruqt-serverless.md) for setup, connection requirements, and local Serverless runs.
+
 ---
 
 ## Documentation
@@ -389,6 +399,7 @@ See `instruqt/README.md` for detailed deployment instructions.
 | Document                                       | Description                       |
 | ---------------------------------------------- | --------------------------------- |
 | [Specification](docs/review-bomb-workshop-spec.md)  | Complete technical specification  |
+| [Instruqt Serverless](docs/instruqt-serverless.md) | Running on Elastic Serverless (search) with Instruqt |
 | [Admin Setup Guide](docs/admin-setup-guide.md) | Detailed facilitator instructions |
 | [Talk Track](docs/talk-track.md)               | Presenter speaking notes          |
 | [Troubleshooting](docs/troubleshooting.md)     | Common issues and solutions       |

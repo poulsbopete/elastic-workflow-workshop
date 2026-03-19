@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# Setup script for Challenge 1 (Serverless track) — runs on host-1
+#
+# Instruqt provides: ELASTICSEARCH_URL, ELASTICSEARCH_API_KEY (or ELASTICSEARCH_APIKEY), KIBANA_URL
+#
+# This script:
+#   1. Clones the workshop repo (if not present)
+#   2. Creates .env with Serverless credentials
+#   3. If track startup already ran, just ensures app is running; otherwise runs full bootstrap
+#   4. Waits for app /health
+#
+
+set -e
+
+WORKSHOP_DIR="${WORKSHOP_DIR:-/workspace/workshop/elastic-workflow-workshop}"
+REPO_URL="${REPO_URL:-https://github.com/elastic/elastic-workflow-workshop.git}"
+
+ELASTICSEARCH_URL="${ELASTICSEARCH_URL:?ELASTICSEARCH_URL required}"
+ELASTICSEARCH_API_KEY="${ELASTICSEARCH_API_KEY:-$ELASTICSEARCH_APIKEY}"
+if [ -z "${ELASTICSEARCH_API_KEY}" ]; then
+    echo "ERROR: ELASTICSEARCH_API_KEY or ELASTICSEARCH_APIKEY required for Serverless"
+    exit 1
+fi
+KIBANA_URL="${KIBANA_URL:-}"
+
+echo "=============================================="
+echo "[host-1] Challenge 1 Setup (Serverless)"
+echo "=============================================="
+
+# Clone repo if needed
+if [ ! -d "${WORKSHOP_DIR}" ]; then
+    echo "Cloning workshop repository..."
+    mkdir -p "$(dirname "${WORKSHOP_DIR}")"
+    git clone "${REPO_URL}" "${WORKSHOP_DIR}"
+fi
+
+# .env
+cat > "${WORKSHOP_DIR}/.env" <<EOF
+ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
+ELASTICSEARCH_API_KEY=${ELASTICSEARCH_API_KEY}
+KIBANA_URL=${KIBANA_URL}
+ELASTICSEARCH_VERIFY_CERTS=true
+EOF
+
+cd "${WORKSHOP_DIR}"
+if [ ! -d ".venv" ]; then
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install -q -r requirements.txt
+else
+    source .venv/bin/activate
+fi
+
+# If data not loaded yet, run full bootstrap (create indices + load data + start app)
+BUSINESS_COUNT=$(curl -s -H "Authorization: ApiKey ${ELASTICSEARCH_API_KEY}" "${ELASTICSEARCH_URL}/businesses/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
+if [ "${BUSINESS_COUNT:-0}" -eq "0" ] 2>/dev/null; then
+    echo "Data not loaded; running full bootstrap..."
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    TRACK_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
+    if [ -x "${TRACK_DIR}/../startup-serverless.sh" ]; then
+        "${TRACK_DIR}/../startup-serverless.sh"
+    else
+        echo "Run the track startup script first, or run: admin/setup_workshop_data.sh"
+        exit 1
+    fi
+else
+    # Ensure app is running
+    if ! curl -s http://localhost:8000/health > /dev/null 2>&1; then
+        echo "Starting FastAPI application..."
+        nohup python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 > /tmp/app.log 2>&1 &
+        for i in $(seq 1 30); do
+            curl -s http://localhost:8000/health > /dev/null 2>&1 && break
+            sleep 2
+        done
+    fi
+fi
+
+echo ""
+echo "Challenge 1 (Serverless) ready."
+echo "  ElasticEats: http://localhost:8000/elasticeats"
+echo "  Kibana:      ${KIBANA_URL}"
+echo ""

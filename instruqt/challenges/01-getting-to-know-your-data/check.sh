@@ -10,7 +10,10 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+[ -f "${SCRIPT_DIR}/../../lib/auth.sh" ] && source "${SCRIPT_DIR}/../../lib/auth.sh"
 ELASTICSEARCH_URL="${ELASTICSEARCH_URL:-http://localhost:9200}"
+type es_curl &>/dev/null || es_curl() { curl -s "$@"; }
 
 echo "=============================================="
 echo "Checking Challenge 1 Completion"
@@ -23,7 +26,7 @@ ERRORS=0
 # ----------------------------------------------
 echo ""
 echo "[1/4] Checking businesses index..."
-BUSINESS_COUNT=$(curl -s "${ELASTICSEARCH_URL}/businesses/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
+BUSINESS_COUNT=$(es_curl "${ELASTICSEARCH_URL}/businesses/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
 
 if [ "${BUSINESS_COUNT:-0}" -eq "0" ] 2>/dev/null; then
     echo "  FAIL: The businesses index is empty."
@@ -38,7 +41,7 @@ fi
 # ----------------------------------------------
 echo ""
 echo "[2/4] Checking users index..."
-USER_COUNT=$(curl -s "${ELASTICSEARCH_URL}/users/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
+USER_COUNT=$(es_curl "${ELASTICSEARCH_URL}/users/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
 
 if [ "${USER_COUNT:-0}" -eq "0" ] 2>/dev/null; then
     echo "  FAIL: The users index is empty."
@@ -53,7 +56,7 @@ fi
 # ----------------------------------------------
 echo ""
 echo "[3/4] Checking reviews index..."
-REVIEW_COUNT=$(curl -s "${ELASTICSEARCH_URL}/reviews/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
+REVIEW_COUNT=$(es_curl "${ELASTICSEARCH_URL}/reviews/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
 
 if [ "${REVIEW_COUNT:-0}" -eq "0" ] 2>/dev/null; then
     echo "  FAIL: The reviews index is empty."
@@ -68,7 +71,7 @@ fi
 # ----------------------------------------------
 echo ""
 echo "[4/4] Checking trust_score data..."
-TRUST_SCORE_CHECK=$(curl -s "${ELASTICSEARCH_URL}/users/_search" \
+TRUST_SCORE_CHECK=$(es_curl "${ELASTICSEARCH_URL}/users/_search" \
     -H "Content-Type: application/json" \
     -d '{
         "size": 0,

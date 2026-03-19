@@ -127,6 +127,21 @@ def get_semantic_text_fields(mapping: dict) -> list[tuple[str, str]]:
     return fields
 
 
+def serverless_settings(settings: dict) -> dict:
+    """
+    Return settings safe for Elasticsearch Serverless (no number_of_shards/number_of_replicas).
+    """
+    if not settings:
+        return settings
+    out = dict(settings)
+    if "index" in out:
+        idx = dict(out["index"])
+        idx.pop("number_of_shards", None)
+        idx.pop("number_of_replicas", None)
+        out["index"] = idx
+    return out
+
+
 def remove_semantic_text_fields(mapping: dict) -> dict:
     """
     Remove semantic_text fields and their copy_to references from a mapping.
@@ -166,7 +181,8 @@ def create_index(
     index_name: str,
     mapping: dict,
     dry_run: bool = False,
-    verbose: bool = False
+    verbose: bool = False,
+    serverless: bool = False
 ) -> bool:
     """
     Create an Elasticsearch index with the given mapping.
@@ -191,6 +207,8 @@ def create_index(
         # Extract settings and mappings from the definition
         settings = mapping.get("settings", {})
         mappings = mapping.get("mappings", {})
+        if serverless:
+            settings = serverless_settings(settings)
 
         # Create the index
         es.indices.create(
@@ -271,6 +289,12 @@ def delete_index(
     help="Skip semantic_text fields (for environments without ELSER). "
          "Indices will be created without semantic search capabilities."
 )
+@click.option(
+    "--serverless",
+    is_flag=True,
+    default=False,
+    help="Use Serverless-compatible index settings (omit number_of_shards/number_of_replicas)."
+)
 @common_options
 @elasticsearch_options
 @env_option
@@ -280,6 +304,7 @@ def main(
     delete_existing: bool,
     force: bool,
     skip_semantic: bool,
+    serverless: bool,
     dry_run: bool,
     verbose: bool,
     config: str
@@ -444,8 +469,8 @@ def main(
         elif has_semantic and elser_available:
             semantic_enabled_count += 1
 
-        # Create index
-        if create_index(es, index_name, mapping, dry_run=dry_run, verbose=verbose):
+        # Create index (pass serverless for settings filtering)
+        if create_index(es, index_name, mapping, dry_run=dry_run, verbose=verbose, serverless=serverless):
             success_count += 1
         else:
             fail_count += 1

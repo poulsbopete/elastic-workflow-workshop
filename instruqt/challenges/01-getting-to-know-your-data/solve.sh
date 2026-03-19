@@ -10,7 +10,10 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+[ -f "${SCRIPT_DIR}/../../lib/auth.sh" ] && source "${SCRIPT_DIR}/../../lib/auth.sh"
 ELASTICSEARCH_URL="${ELASTICSEARCH_URL:-http://localhost:9200}"
+type es_curl &>/dev/null || es_curl() { curl -s "$@"; }
 
 echo "=============================================="
 echo "Solving Challenge 1: Getting to Know Your Data"
@@ -24,15 +27,15 @@ echo ""
 echo "Verifying data is loaded..."
 
 # Check businesses
-BUSINESS_COUNT=$(curl -s "${ELASTICSEARCH_URL}/businesses/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
+BUSINESS_COUNT=$(es_curl "${ELASTICSEARCH_URL}/businesses/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
 echo "  Businesses: ${BUSINESS_COUNT}"
 
 # Check users
-USER_COUNT=$(curl -s "${ELASTICSEARCH_URL}/users/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
+USER_COUNT=$(es_curl "${ELASTICSEARCH_URL}/users/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
 echo "  Users: ${USER_COUNT}"
 
 # Check reviews
-REVIEW_COUNT=$(curl -s "${ELASTICSEARCH_URL}/reviews/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
+REVIEW_COUNT=$(es_curl "${ELASTICSEARCH_URL}/reviews/_count" 2>/dev/null | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
 echo "  Reviews: ${REVIEW_COUNT}"
 
 # Simulate running the key queries from the assignment
@@ -42,7 +45,7 @@ echo "Running sample ES|QL queries via API..."
 # Query 1: Count businesses
 echo ""
 echo "Query: FROM businesses | STATS count = COUNT(*)"
-curl -s -X POST "${ELASTICSEARCH_URL}/_query" \
+es_curl -X POST "${ELASTICSEARCH_URL}/_query" \
     -H "Content-Type: application/json" \
     -d '{
         "query": "FROM businesses | STATS count = COUNT(*)"
@@ -51,7 +54,7 @@ curl -s -X POST "${ELASTICSEARCH_URL}/_query" \
 # Query 2: User trust score distribution
 echo ""
 echo "Query: FROM users | STATS avg_trust = AVG(trust_score)"
-curl -s -X POST "${ELASTICSEARCH_URL}/_query" \
+es_curl -X POST "${ELASTICSEARCH_URL}/_query" \
     -H "Content-Type: application/json" \
     -d '{
         "query": "FROM users | STATS avg_trust = AVG(trust_score), min_trust = MIN(trust_score), max_trust = MAX(trust_score)"
@@ -60,7 +63,7 @@ curl -s -X POST "${ELASTICSEARCH_URL}/_query" \
 # Query 3: Review rating distribution
 echo ""
 echo "Query: FROM reviews | STATS count = COUNT(*) BY stars"
-curl -s -X POST "${ELASTICSEARCH_URL}/_query" \
+es_curl -X POST "${ELASTICSEARCH_URL}/_query" \
     -H "Content-Type: application/json" \
     -d '{
         "query": "FROM reviews | STATS count = COUNT(*) BY stars | SORT stars DESC"
