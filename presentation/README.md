@@ -20,9 +20,15 @@ From the **repository root**:
 
 ```bash
 make presentation-html
-# or
-marp presentation/marp/whats-new-elastic-search-9.3.md -o presentation/marp/whats-new-elastic-search-9.3.html
-marp presentation/marp/whats-new-elastic-search-9.3.md --pdf -o presentation/marp/whats-new-elastic-search-9.3.pdf
+# writes docs/slides/whats-new-elastic-search-9.3.html (for GitHub Pages /docs)
+```
+
+**GitHub Pages:** Settings → Pages → **Deploy from branch** → `main` → **`/docs`**. The site root is **`docs/index.html`**, which links to the built deck under **`docs/slides/`**. Commit the HTML after running `make presentation-html` (outputs are not ignored under `docs/slides/`).
+
+Optional local PDF (not committed by default):
+
+```bash
+npx @marp-team/marp-cli --no-stdin presentation/marp/whats-new-elastic-search-9.3.md --pdf -o presentation/marp/whats-new-elastic-search-9.3.pdf
 ```
 
 **VS Code:** install the [Marp for VS Code](https://marketplace.visualstudio.com/items?itemName=marp-team.marp-vscode) extension and open the `.md` file for live preview.

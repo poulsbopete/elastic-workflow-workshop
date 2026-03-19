@@ -30,7 +30,7 @@ help:
 	@echo "  docker-run     - Run in Docker container"
 	@echo ""
 	@echo "Presentation:"
-	@echo "  presentation-html - Build Marp deck to HTML (requires marp-cli)"
+	@echo "  presentation-html - Build Marp deck to docs/slides/*.html (npx marp-cli)"
 
 # Setup & Installation
 setup:
@@ -108,10 +108,10 @@ docker-build:
 docker-run:
 	docker run -p 8000:8000 --env-file .env review-fraud-workshop
 
-# Marp deck → HTML (npm i -g @marp-team/marp-cli)
+# Marp deck → HTML for GitHub Pages (/docs/slides). Uses npx if marp not on PATH.
 presentation-html:
-	marp presentation/marp/whats-new-elastic-search-9.3.md \
-		-o presentation/marp/whats-new-elastic-search-9.3.html
+	npx --yes @marp-team/marp-cli --no-stdin presentation/marp/whats-new-elastic-search-9.3.md \
+		-o docs/slides/whats-new-elastic-search-9.3.html
 
 # Connection test
 test-connection:
