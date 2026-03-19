@@ -1,0 +1,28 @@
+# Based on elastic-autonomous-observability:
+# https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability
+#
+# Host image elastic/es3-api-v2 provisions a Serverless Elasticsearch project via
+# bin/es3-api.py (see track_scripts/setup-es3-api). Configure Sandbox → Secrets:
+#   ESS_CLOUD_API_KEY — Elastic Cloud org API key (es3-api provisioning)
+#   LLM_PROXY_PROD — optional; for Kibana Agent Builder / LLM features in the lab
+#
+version: "3"
+
+virtualmachines:
+  - name: es3-api
+    image: elastic/es3-api-v2
+    shell: /bin/bash
+    environment:
+      PROJECT_TYPE: elasticsearch
+      OPTIMIZED_FOR: general_purpose
+      REGIONS: aws-us-east-1
+    memory: 12288
+    cpus: 4
+    allow_external_ingress:
+      - http
+      - https
+      - high-ports
+
+secrets:
+  - name: ESS_CLOUD_API_KEY
+  - name: LLM_PROXY_PROD

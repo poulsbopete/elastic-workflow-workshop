@@ -368,27 +368,32 @@ injection:
 
 ```bash
 cd instruqt
+instruqt auth login   # once per machine
+instruqt track validate
+instruqt track push
+```
+
+For the **Serverless** track (separate slug on Instruqt):
+
+```bash
+cd instruqt/review-bomb-workshop-serverless
 instruqt track validate
 instruqt track push
 ```
 
 ### Track Configuration
 
-The `track.yml` defines:
+The `track.yml` defines challenges and tabs; `config.yml` defines sandbox hosts (required for `instruqt track validate` / `push`).
 
-- Virtual machine specifications
-- Elasticsearch cluster provisioning
-- Pre-installed tools and data
-
-See `instruqt/README.md` for detailed deployment instructions.
+See [`instruqt/README.md`](instruqt/README.md) for both tracks (ECK + Serverless), validation, and push notes.
 
 ### Serverless (search) track
 
-The workshop can run on **Elastic Cloud Serverless (search)** using the same content and challenges. This uses [elastic-autonomous-observability](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability) as the environment base: one VM with credentials to a Serverless project, data loaded via bulk API (no snapshot restore).
+The workshop can run on **Elastic Cloud Serverless (Elasticsearch)** using the same challenges. The Instruqt layout matches **[Elastic Autonomous Observability](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability)** (`es3-api` + `elastic/es3-api-v2` + `ESS_CLOUD_API_KEY`), then runs `startup-serverless.sh` to bulk-load data and start the app.
 
-- **Track:** `instruqt/track-serverless.yml`
-- **Sandbox:** `instruqt/config-serverless.yml` (single host `host-1`)
-- **Startup:** `instruqt/startup-serverless.sh` (create indices with `--serverless`, load data, start app)
+- **Track root (push from here):** `instruqt/review-bomb-workshop-serverless/` (`track.yml`, `config.yml`, `track_scripts/`)
+- **Track source / edits:** `instruqt/track-serverless.yml` (re-copy to `review-bomb-workshop-serverless/track.yml` after changes)
+- **Bootstrap:** `track_scripts/setup-es3-api` → `instruqt/startup-serverless.sh`
 
 See [docs/instruqt-serverless.md](docs/instruqt-serverless.md) for setup, connection requirements, and local Serverless runs.
 

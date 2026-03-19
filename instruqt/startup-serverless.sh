@@ -83,7 +83,7 @@ cat > "${WORKSHOP_DIR}/.env" <<EOF
 ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
 ELASTICSEARCH_API_KEY=${ELASTICSEARCH_API_KEY}
 KIBANA_URL=${KIBANA_URL}
-ELASTICSEARCH_VERIFY_CERTS=true
+ELASTICSEARCH_VERIFY_CERTS=${ELASTICSEARCH_VERIFY_CERTS:-true}
 EOF
 echo "  .env written."
 
@@ -94,20 +94,16 @@ echo ""
 echo "[4/7] Creating indices and loading data..."
 cd "${WORKSHOP_DIR}"
 
-# Use Python from path; prefer venv if present
-if [ -d ".venv" ]; then
-    source .venv/bin/activate
-else
-    python3 -m venv .venv
-    source .venv/bin/activate
-    pip install -q -r requirements.txt
-fi
+# No venv: es3-api-v2 images lack ensurepip / python3-venv (see lib/serverless_pydeps.sh).
+INSTRUQT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/serverless_pydeps.sh
+source "${INSTRUQT_DIR}/lib/serverless_pydeps.sh"
 
 # Create indices: Serverless-compatible (--serverless omits number_of_shards etc.)
 # If ELSER is not available in the project, use --skip-semantic
 export ELASTICSEARCH_URL ELASTICSEARCH_API_KEY
-PYTHONPATH="${WORKSHOP_DIR}" python3 -m admin.create_indices --delete-existing --force --serverless 2>/dev/null || \
-PYTHONPATH="${WORKSHOP_DIR}" python3 -m admin.create_indices --delete-existing --force --serverless --skip-semantic
+python3 -m admin.create_indices --delete-existing --force --serverless 2>/dev/null || \
+python3 -m admin.create_indices --delete-existing --force --serverless --skip-semantic
 
 # Load data (uses data/sample or generates)
 if [ ! -d "data/sample" ]; then
@@ -115,12 +111,12 @@ if [ ! -d "data/sample" ]; then
 fi
 if [ ! -f "data/sample/businesses.ndjson" ] || [ ! -f "data/sample/reviews.ndjson" ]; then
     echo "  Generating sample data..."
-    PYTHONPATH="${WORKSHOP_DIR}" python3 -m admin.generate_sample_data \
+    python3 -m admin.generate_sample_data \
         --businesses 300 --users 1500 --reviews 8000 --output data/sample 2>/dev/null || true
 fi
 if [ -f "data/sample/businesses.ndjson" ]; then
     echo "  Loading data..."
-    PYTHONPATH="${WORKSHOP_DIR}" python3 -m admin.load_data \
+    python3 -m admin.load_data \
         --businesses-file data/sample/businesses.ndjson \
         --users-file data/sample/users.ndjson \
         --reviews-file data/sample/reviews.ndjson 2>/dev/null || true
@@ -152,7 +148,7 @@ done
 # -----------------------------------------------------------------------------
 echo ""
 echo "[6/7] Calculating trust scores (if supported)..."
-PYTHONPATH="${WORKSHOP_DIR}" python3 -m admin.calculate_trust_scores 2>/dev/null || echo "  Skipped (optional)."
+python3 -m admin.calculate_trust_scores 2>/dev/null || echo "  Skipped (optional)."
 
 # -----------------------------------------------------------------------------
 # 7. Start FastAPI app

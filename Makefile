@@ -1,4 +1,5 @@
-.PHONY: setup install prepare-data load-data run dev clean verify help test lint format docker-build docker-run sample-data
+.PHONY: setup install prepare-data load-data run dev clean verify help test lint format docker-build docker-run sample-data presentation-html \
+	instruqt-validate instruqt-push instruqt-push-serverless instruqt-push-all publish
 
 help:
 	@echo "Review Campaign Detection Workshop - Available Commands"
@@ -27,6 +28,9 @@ help:
 	@echo "Docker:"
 	@echo "  docker-build   - Build Docker image"
 	@echo "  docker-run     - Run in Docker container"
+	@echo ""
+	@echo "Presentation:"
+	@echo "  presentation-html - Build Marp deck to HTML (requires marp-cli)"
 
 # Setup & Installation
 setup:
@@ -104,6 +108,35 @@ docker-build:
 docker-run:
 	docker run -p 8000:8000 --env-file .env review-fraud-workshop
 
+# Marp deck → HTML (npm i -g @marp-team/marp-cli)
+presentation-html:
+	marp presentation/marp/whats-new-elastic-search-9.3.md \
+		-o presentation/marp/whats-new-elastic-search-9.3.html
+
 # Connection test
 test-connection:
 	python -c "from admin.utils.elasticsearch import test_connection; test_connection()"
+
+# --- Git + Instruqt publish (run after: git add -A && git commit) ---
+# Restores full serverless track.yml after push; CLI strips challenges locally.
+instruqt-validate:
+	cd instruqt && instruqt track validate
+	cd instruqt/review-bomb-workshop-serverless && instruqt track validate
+
+instruqt-push-main:
+	cd instruqt && instruqt track validate && instruqt track push --force
+
+instruqt-push-serverless:
+	cd instruqt/review-bomb-workshop-serverless && instruqt track validate && instruqt track push --force
+	rm -rf instruqt/review-bomb-workshop-serverless/01-getting-to-know-your-data \
+		instruqt/review-bomb-workshop-serverless/02-workflows \
+		instruqt/review-bomb-workshop-serverless/03-agent-builder \
+		instruqt/review-bomb-workshop-serverless/04-end-to-end-scenario
+	cp instruqt/track-serverless.yml instruqt/review-bomb-workshop-serverless/track.yml
+	@echo "Synced track.yml from track-serverless.yml. If checksum changed, copy from instruqt output into track-serverless.yml."
+
+instruqt-push-all: instruqt-push-main instruqt-push-serverless
+
+publish: instruqt-validate ## git push origin + both Instruqt tracks (commit first; needs auth)
+	git push origin main
+	$(MAKE) instruqt-push-all
