@@ -37,6 +37,6 @@ npx @marp-team/marp-cli --no-stdin presentation/marp/whats-new-elastic-search-9.
 
 The **same narrative** (agenda, philosophy, review-bomb context, journey, challenges) is reflected in **`instruqt/track-serverless.yml`** (Instruqt track) under each challenge’s `notes:` blocks — shown as **slides while labs load** when **`enhanced_loading: false`** (Instruqt “Notes only”; same idea as elastic-autonomous-observability).
 
-When you **change the Marp deck**, update those `notes:` sections (or ask to regenerate) so facilitators and learners stay aligned.
+When you **change the Marp deck**, update **`instruqt/track-serverless.yml`** challenge **`notes:`** for *Getting to Know Your Data* (or ask to regenerate) so the **Instruqt wait carousel** stays aligned. Published deck URL: [slides/whats-new-elastic-search-9.3.html](https://poulsbopete.github.io/elastic-workflow-workshop/slides/whats-new-elastic-search-9.3.html).
 
 Source PDF (local only, not in repo): *Peter's What's New In Elastic - Search 9.3.pdf*
