@@ -1,5 +1,5 @@
 .PHONY: setup install prepare-data load-data run dev clean verify help test lint format docker-build docker-run sample-data presentation-html \
-	instruqt-validate instruqt-push instruqt-push-serverless instruqt-push-all publish
+	instruqt-validate instruqt-push-serverless publish
 
 help:
 	@echo "Review Campaign Detection Workshop - Available Commands"
@@ -120,11 +120,7 @@ test-connection:
 # --- Git + Instruqt publish (run after: git add -A && git commit) ---
 # Restores full serverless track.yml after push; CLI strips challenges locally.
 instruqt-validate:
-	cd instruqt && instruqt track validate
 	cd instruqt/review-bomb-workshop-serverless && instruqt track validate
-
-instruqt-push-main:
-	cd instruqt && instruqt track validate && instruqt track push --force
 
 instruqt-push-serverless:
 	cd instruqt/review-bomb-workshop-serverless && instruqt track validate && instruqt track push --force
@@ -135,8 +131,6 @@ instruqt-push-serverless:
 	cp instruqt/track-serverless.yml instruqt/review-bomb-workshop-serverless/track.yml
 	@echo "Synced track.yml from track-serverless.yml. If checksum changed, copy from instruqt output into track-serverless.yml."
 
-instruqt-push-all: instruqt-push-main instruqt-push-serverless
-
-publish: instruqt-validate ## git push origin + both Instruqt tracks (commit first; needs auth)
+publish: instruqt-validate ## git push origin + Instruqt serverless track (commit first; needs auth)
 	git push origin main
-	$(MAKE) instruqt-push-all
+	$(MAKE) instruqt-push-serverless

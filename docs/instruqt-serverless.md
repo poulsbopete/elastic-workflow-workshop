@@ -15,15 +15,15 @@ Pushable track root: **`instruqt/review-bomb-workshop-serverless/`** (contains `
 
 **Loading / wait UX:** `enhanced_loading: false` in `track.yml` matches Instruqt **[Notes only](https://docs.instruqt.com/tracks/manage/loading-experience)** — learners see the challenge **`notes:`** carousel (slides) while the sandbox provisions, like **[elastic-autonomous-observability](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability)**. Setting `enhanced_loading: true` switches to **Full access** and shows assignment + tabs early with generic per-tab loading text instead.
 
-## Differences from the ECK / snapshot track
+## Sandbox summary
 
-| Aspect | ECK track (`instruqt/track.yml`) | Serverless track (`review-bomb-workshop-serverless/`) |
-|--------|-----------------------------------|--------------------------------------------------------|
-| **Host** | `elastic` (your org’s VM image) | **`es3-api`** (`elastic/es3-api-v2`) |
-| **Elasticsearch** | ECK / local cluster | **Serverless Elasticsearch** project (created per participant) |
-| **Kibana tab** | Often `:5601` on lab host | **`:8080`** on `es3-api` (nginx → Cloud) |
-| **Data** | Snapshot restore, etc. | **Bulk API** via `startup-serverless.sh` |
-| **Secrets** | Varies | **`ESS_CLOUD_API_KEY`**, **`LLM_PROXY_PROD`** (Sandbox → Secrets; match AO / workshop standard) |
+| Aspect | This Instruqt track |
+|--------|---------------------|
+| **Host** | **`es3-api`** (`elastic/es3-api-v2`) |
+| **Elasticsearch** | **Serverless Elasticsearch** project (created per participant) |
+| **Kibana tab** | **`:8080`** on `es3-api` (nginx → Cloud) |
+| **Data** | **Bulk API** via `startup-serverless.sh` |
+| **Secrets** | **`ESS_CLOUD_API_KEY`**, **`LLM_PROXY_PROD`** (Sandbox → Secrets) |
 
 ## Prerequisites (Instruqt track admin)
 

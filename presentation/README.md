@@ -29,7 +29,7 @@ marp presentation/marp/whats-new-elastic-search-9.3.md --pdf -o presentation/mar
 
 ### Instruqt wait carousel
 
-The **same narrative** (agenda, philosophy, review-bomb context, journey, challenges) is reflected in **`instruqt/track.yml`** and **`instruqt/track-serverless.yml`** under each challenge’s `notes:` blocks — shown as **slides while labs load** when **`enhanced_loading: false`** (Instruqt “Notes only”; same idea as elastic-autonomous-observability).
+The **same narrative** (agenda, philosophy, review-bomb context, journey, challenges) is reflected in **`instruqt/track-serverless.yml`** (Instruqt track) under each challenge’s `notes:` blocks — shown as **slides while labs load** when **`enhanced_loading: false`** (Instruqt “Notes only”; same idea as elastic-autonomous-observability).
 
 When you **change the Marp deck**, update those `notes:` sections (or ask to regenerate) so facilitators and learners stay aligned.
 

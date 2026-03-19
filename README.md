@@ -364,35 +364,33 @@ injection:
 
 ## Instruqt Deployment
 
-### Build the Track
+### Publish the track
 
 ```bash
-cd instruqt
 instruqt auth login   # once per machine
-instruqt track validate
-instruqt track push
+make publish          # from repo root: git push + validate + instruqt push (after git commit)
 ```
 
-For the **Serverless** track (separate slug on Instruqt):
+Or manually:
 
 ```bash
 cd instruqt/review-bomb-workshop-serverless
 instruqt track validate
-instruqt track push
+instruqt track push --force
 ```
 
-### Track Configuration
+### Track configuration
 
-The `track.yml` defines challenges and tabs; `config.yml` defines sandbox hosts (required for `instruqt track validate` / `push`).
+`track.yml` + `config.yml` live under **`instruqt/review-bomb-workshop-serverless/`**. Edit metadata in **`instruqt/track-serverless.yml`** and sync to `review-bomb-workshop-serverless/track.yml` (or use **`make publish`**, which re-syncs after push).
 
-See [`instruqt/README.md`](instruqt/README.md) for both tracks (ECK + Serverless), validation, and push notes.
+See [`instruqt/README.md`](instruqt/README.md) for layout, secrets, and checksum notes.
 
 ### Serverless (search) track
 
-The workshop can run on **Elastic Cloud Serverless (Elasticsearch)** using the same challenges. The Instruqt layout matches **[Elastic Autonomous Observability](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability)** (`es3-api` + `elastic/es3-api-v2` + `ESS_CLOUD_API_KEY`), then runs `startup-serverless.sh` to bulk-load data and start the app.
+The workshop runs on **Elastic Cloud Serverless (Elasticsearch)**. The Instruqt layout matches **[Elastic Autonomous Observability](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability)** (`es3-api` + `elastic/es3-api-v2` + secrets), then runs `startup-serverless.sh` to bulk-load data and start the app.
 
-- **Track root (push from here):** `instruqt/review-bomb-workshop-serverless/` (`track.yml`, `config.yml`, `track_scripts/`)
-- **Track source / edits:** `instruqt/track-serverless.yml` (re-copy to `review-bomb-workshop-serverless/track.yml` after changes)
+- **Track root (push from here):** `instruqt/review-bomb-workshop-serverless/`
+- **Track source / edits:** `instruqt/track-serverless.yml`
 - **Bootstrap:** `track_scripts/setup-es3-api` → `instruqt/startup-serverless.sh`
 
 See [docs/instruqt-serverless.md](docs/instruqt-serverless.md) for setup, connection requirements, and local Serverless runs.

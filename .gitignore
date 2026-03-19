@@ -71,11 +71,12 @@ presentation/marp/*.pdf
 # Instruqt / startup-serverless.sh pip --target install
 .pydeps/
 
-# Instruqt CLI creates duplicate challenge dirs next to challenges/ symlink after push/pull
+# Instruqt CLI creates duplicate challenge dirs after push/pull (serverless track + stray copies under instruqt/)
 instruqt/review-bomb-workshop-serverless/01-getting-to-know-your-data/
 instruqt/review-bomb-workshop-serverless/02-workflows/
 instruqt/review-bomb-workshop-serverless/03-agent-builder/
 instruqt/review-bomb-workshop-serverless/04-end-to-end-scenario/
-
-# Duplicate track root (canonical: instruqt/track.yml + review-bomb-workshop-serverless/)
-instruqt/review-bomb-workshop/
+instruqt/01-getting-to-know-your-data/
+instruqt/02-workflows/
+instruqt/03-agent-builder/
+instruqt/04-end-to-end-scenario/

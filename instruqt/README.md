@@ -1,101 +1,67 @@
-# Instruqt tracks
+# Instruqt track (Serverless)
 
-Two track roots live under this directory:
+The only Instruqt track in this repo is **[review-bomb-workshop-serverless](https://play.instruqt.com/manage/elastic/tracks/review-bomb-workshop-serverless)** — **Elastic Cloud Serverless (Elasticsearch)**, same pattern as [elastic-autonomous-observability](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability): `es3-api` + `elastic/es3-api-v2` + secrets + `track_scripts/setup-es3-api`.
 
-| Directory | Track slug | Use case |
-|-----------|------------|----------|
-| `instruqt/` (this folder) | `review-bomb-workshop` | ECK / snapshot workshop (`config.yml` → host `elastic`) |
-| `review-bomb-workshop-serverless/` | [`review-bomb-workshop-serverless`](https://play.instruqt.com/manage/elastic/tracks/review-bomb-workshop-serverless) | **Serverless Elasticsearch** — same pattern as [elastic-autonomous-observability](https://play.instruqt.com/manage/elastic/tracks/elastic-autonomous-observability): `es3-api` + `elastic/es3-api-v2` + `ESS_CLOUD_API_KEY` + `track_scripts/setup-es3-api` |
+Shared workshop content lives under **`instruqt/`** (`challenges/`, `lib/`, `startup-serverless.sh`) and is symlinked from **`review-bomb-workshop-serverless/`**.
 
 ## Challenge layout
 
-Keep **one** challenge tree only: `challenges/01-…` under the track root (with `track.yml` beside it).
+Keep **one** challenge tree: `instruqt/challenges/01-…`. The **pushable** track root is `review-bomb-workshop-serverless/` with `assignment: challenges/01-…/assignment.md`.
 
-Do **not** add a second copy as `instruqt/01-getting-to-know-your-data/` etc. Instruqt will treat those as extra challenges and fail validation with **duplicate slug**.
+Do **not** add duplicate folders as `instruqt/01-getting-to-know-your-data/` or next to the serverless `challenges/` symlink — Instruqt will report **duplicate slug**.
 
 ## Loading / wait screens
 
-- **`lab_config.loadingMessages: true`** — enables rotating tips during tab/sandbox load ([loading experience](https://docs.instruqt.com/tracks/manage/loading-experience)).
-- **`enhanced_loading`** (track level) — `false` = **Notes only**: challenge **notes** as slides while the lab loads ([loading experience](https://docs.instruqt.com/tracks/manage/loading-experience)), matching **elastic-autonomous-observability**. `true` = **Full access** (assignment + tabs early; generic per-tab “coffee” wait messages).
-- **Extra `notes:` slides** on each challenge — carousel content while waiting (especially challenge 1).
+- **`lab_config.loadingMessages: true`** — rotating tips on the loading bar ([loading experience](https://docs.instruqt.com/tracks/manage/loading-experience)).
+- **`enhanced_loading: false`** — **Notes only** (slide carousel while the lab loads), aligned with **elastic-autonomous-observability**.
+- **`notes:`** on each challenge — carousel copy while waiting.
 
 ## Prerequisites
 
-- [Instruqt CLI](https://docs.instruqt.com/getting-started/installation) installed and authenticated:
+- [Instruqt CLI](https://docs.instruqt.com/getting-started/installation): `instruqt auth login`
+- Push permission for **`owner: elastic`** in `track-serverless.yml` (change if you fork).
 
-  ```bash
-  instruqt auth login
-  ```
+## Validate & push
 
-- Permission to push to the **owner** team configured in `track.yml` (`owner: elastic` today). If you fork for your own org, change `owner` / `developers` in `track.yml` before pushing.
-
-## Validate
-
-```bash
-cd instruqt
-instruqt track validate
-
-cd review-bomb-workshop-serverless
-instruqt track validate
-```
-
-## Push to Instruqt
-
-**Recommended (Git + both tracks):** from the **repository root**, after committing:
+From repo root (after `git commit`):
 
 ```bash
 make publish
 ```
 
-This runs `instruqt track validate` for both tracks, **`git push origin main`**, then **`instruqt track push --force`** for `review-bomb-workshop` and `review-bomb-workshop-serverless`, and re-syncs serverless `track.yml` from `track-serverless.yml` (see below).
+That validates, **`git push origin main`**, **`instruqt track push --force`** for the serverless track, then re-syncs `track.yml` from `track-serverless.yml`.
 
----
-
-From the track root you want to publish manually:
+Manual:
 
 ```bash
-cd instruqt
-instruqt track push --force
-
-# Serverless variant (separate track on the platform)
-cd review-bomb-workshop-serverless
+cd instruqt/review-bomb-workshop-serverless
+instruqt track validate
 instruqt track push --force
 ```
 
-First-time **Serverless** track: if the platform has no track with slug `review-bomb-workshop-serverless`, create it in the Instruqt UI (or `instruqt track create`) for your team, then `pull` into this folder or align `track.yml` `id` with the remote, and push again.
+## Serverless directory layout
 
-Use `--force` only if you intend to overwrite remote edits:
+| Path | Role |
+|------|------|
+| `review-bomb-workshop-serverless/track.yml` | Copy of `../track-serverless.yml` (re-copy after edits to the source file). |
+| `review-bomb-workshop-serverless/config.yml` | `es3-api`, `elastic/es3-api-v2`, **`ESS_CLOUD_API_KEY`**, **`LLM_PROXY_PROD`**. |
+| `review-bomb-workshop-serverless/track_scripts/setup-es3-api` | Provision project, nginx **:8080** / **:9200**, run `startup-serverless.sh`. |
+| `review-bomb-workshop-serverless/track_scripts/cleanup-es3-api` | Delete Serverless project. |
+| `track-serverless.yml` | Source for track metadata (author here, then copy to `review-bomb-workshop-serverless/track.yml`). |
 
-```bash
-instruqt track push --force
-```
+### `instruqt track push` side effects
 
-## Serverless track layout
+The CLI may **shorten** `review-bomb-workshop-serverless/track.yml` and create **`01-*`…`04-*`** next to the `challenges/` symlink → duplicate slugs until removed.
 
-`review-bomb-workshop-serverless/` contains:
+**`make publish`** already runs `rm -rf …/01-*` and `cp track-serverless.yml …/track.yml`. Stray dirs are in **`.gitignore`**.
 
-- `track.yml` — copy of `../track-serverless.yml` (re-copy after editing the source file).
-- `config.yml` — **`es3-api`** + `elastic/es3-api-v2` + secret `ESS_CLOUD_API_KEY` (matches Autonomous Observability).
-- `track_scripts/setup-es3-api` — creates Serverless **Elasticsearch** project, nginx **:8080** / **:9200**, runs `../startup-serverless.sh`.
-- `track_scripts/cleanup-es3-api` — deletes the project.
-- `challenges`, `lib`, `startup-serverless.sh` — symlinks into parent `instruqt/`.
+**Remote track id:** `track-serverless.yml` must keep Instruqt’s internal **`id: 6cqqeywqqnqc`**. Using the slug as `id` causes **`Entity already exists`** on push.
 
-After changing shared challenge scripts, validate/push from **both** track directories if you maintain both labs.
+### Removing the old `review-bomb-workshop` track on Instruqt
 
-### Serverless: `instruqt track push` side effects
-
-The CLI may **rewrite** `review-bomb-workshop-serverless/track.yml` to a short summary and create **`01-*`…`04-*` directories** next to the `challenges/` symlink. That duplicates challenges and breaks `instruqt track validate` until removed.
-
-**After each push** (or add to your workflow):
-
-1. Delete the stray dirs: `rm -rf review-bomb-workshop-serverless/01-*` (four folders).
-2. Restore the full definition: `cp track-serverless.yml review-bomb-workshop-serverless/track.yml` and set **`checksum`** from the short `track.yml` the CLI left behind (or run `validate` / next `push` output).
-
-They are also listed in **`.gitignore`** so they are not committed by mistake.
-
-**Remote track id:** `track-serverless.yml` uses Instruqt’s internal **`id: 6cqqeywqqnqc`** (not the slug). Using `id: review-bomb-workshop-serverless` causes **`Entity already exists`** on push.
+The separate slug **`review-bomb-workshop`** is no longer maintained in this repo. Delete or archive it in the [Instruqt UI](https://play.instruqt.com/manage/elastic/tracks/review-bomb-workshop) if you no longer need it.
 
 ## References
 
-- [docs/instruqt-serverless.md](../docs/instruqt-serverless.md) — Serverless connection, env vars, and bootstrap.
+- [docs/instruqt-serverless.md](../docs/instruqt-serverless.md)
 - [Instruqt configuration files](https://docs.instruqt.com/reference/cli/configuration-files)
