@@ -78,6 +78,7 @@ If the Serverless project has **ELSER**, `startup-serverless.sh` creates `semant
 | **Stale clone on lab VM** | `setup-es3-api` runs `git pull` after clone; set **`WORKSHOP_REPO`** / branch in `config.yml` if you use a fork. |
 | **API key errors** | Sandbox secret **`ESS_CLOUD_API_KEY`** must match the Elastic Cloud org key used by other `es3-api-v2` tracks. |
 | **Logs** | `instruqt track logs review-bomb-workshop-serverless --since 15m` |
+| **“Failed to fetch status” / “Entity not found”** on the wait carousel | Challenge **`id:`** in `track-serverless.yml` must match Instruqt’s IDs. Run `instruqt track pull elastic/review-bomb-workshop-serverless --force`, copy each **`id:`** from pulled `assignment.md` frontmatter into `track-serverless.yml`, sync `review-bomb-workshop-serverless/track.yml`, push. Start a **new** play after fixing. |
 
 ## Local run (no Instruqt)
 

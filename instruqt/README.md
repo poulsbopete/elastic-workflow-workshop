@@ -57,6 +57,8 @@ The CLI may **shorten** `review-bomb-workshop-serverless/track.yml` and create *
 
 **Remote track id:** `track-serverless.yml` must keep Instruqt’s internal **`id: 6cqqeywqqnqc`**. Using the slug as `id` causes **`Entity already exists`** on push.
 
+**Challenge ids:** Each challenge needs Instruqt’s **opaque `id`** (not `01-getting-to-know-your-data`). If the loading carousel shows **“Failed to fetch status” / “Entity not found”**, ids are out of sync. Fix: `instruqt track pull elastic/review-bomb-workshop-serverless --force`, then copy each `id:` from the pulled `assignment.md` YAML frontmatter into `track-serverless.yml`, re-copy to `review-bomb-workshop-serverless/track.yml`, and push.
+
 ### Removing the old `review-bomb-workshop` track on Instruqt
 
 The separate slug **`review-bomb-workshop`** is no longer maintained in this repo. Delete or archive it in the [Instruqt UI](https://play.instruqt.com/manage/elastic/tracks/review-bomb-workshop) if you no longer need it.

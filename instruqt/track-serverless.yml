@@ -78,9 +78,13 @@ lab_config:
 # true ("Full access") shows assignment + tabs with generic per-tab messages ("coffee" style), which we avoid here.
 enhanced_loading: false
 
+# Challenge `id` values MUST match Instruqt’s platform IDs (opaque strings). If you see
+# “Failed to fetch status” / “Entity not found” on the loading carousel, run:
+#   instruqt track pull elastic/review-bomb-workshop-serverless --force
+# and copy `id:` from each pulled assignment.md frontmatter into this file, then push.
 challenges:
   - slug: getting-to-know-your-data
-    id: 01-getting-to-know-your-data
+    id: xv8yiwtyngcd
     type: challenge
     title: Getting to Know Your Data
     teaser: Explore the review platform data and write detection queries
@@ -150,7 +154,7 @@ challenges:
     timelimit: 900
 
   - slug: workflows
-    id: 02-workflows
+    id: v0bdugxd3len
     type: challenge
     title: Building a Detection Workflow
     teaser: Create an automated workflow to detect and respond to attacks
@@ -168,7 +172,7 @@ challenges:
 
           We're ensuring **Kibana** and the **incidents** / **notifications** indices are ready.
 
-          If a tab still shows a spinner, skim the **assignment** — you can start reading the ES|QL detection steps while components load (**enhanced loading**).
+          If a tab still shows a spinner, skim the **assignment** — you can start reading the ES|QL detection steps while components load.
     tabs:
       - title: Kibana
         type: service
@@ -181,7 +185,7 @@ challenges:
     timelimit: 1200
 
   - slug: agent-builder
-    id: 03-agent-builder
+    id: fnyomsacap8n
     type: challenge
     title: Creating Investigation Tools
     teaser: Build AI-powered tools for natural language investigation
@@ -211,7 +215,7 @@ challenges:
     timelimit: 600
 
   - slug: end-to-end-scenario
-    id: 04-end-to-end-scenario
+    id: owsiztlhvflq
     type: challenge
     title: End-to-End Attack Simulation
     teaser: Launch an attack and observe the full detection/response lifecycle
